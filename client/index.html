@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        const socket = io() 
+
+        const form = document.getElementById("form")
+        const message = document.getElementById("message")
+        const messages = document.getElementById("messages")
+
+        socket.on("chat message", (msg) => {
+            const item = `<li>${msg}</li>`
+            messages.insertAdjacentHTML("beforeend",item)
+        })
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault()
+            if(message.value){
+                socket.emit("chat message", message.value)
+                message.value = ""
+            }
+        })
+
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Para que el contenedor principal ocupe toda la altura visible */
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        main {
+            flex: 1; /* Hace que el contenido de main ocupe todo el espacio disponible */
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        #chat {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Para que el contenedor de chat ocupe todo el espacio disponible en main */
+        }
+
+        #messages {
+            flex: 1; /* Hace que #messages ocupe todo el espacio restante en #chat */
+            overflow-y: auto; /* Agrega una barra de desplazamiento vertical si los mensajes son demasiados */
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #form {
+            margin-top: 20px; /* Espacio entre #messages y #form */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a mi primer Chat</h1>
+    </header>
+    <main>
+        <section id="chat">
+            <ul id="messages">
+
+            </ul>
+            <form id="form">
+                <input type="text" name="message" placeholder="Type a message" id="message">
+                <button type="submit">Enviar mensaje</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
